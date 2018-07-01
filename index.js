@@ -96,10 +96,20 @@ const getPokemon = (request, response) => {
 }
 
 const postPokemon = (request, response) => {
+  console.log('cookie: '+ request.cookie);
+  // console.log(request);
   let params = request.body;
   
-  const queryString = 'INSERT INTO pokemon(name, height) VALUES($1, $2);';
-  const values = [params.name, params.height];
+  console.log('cookies: ' + request.cookies)
+  
+  if (request.cookies['users_id'] == null) {
+    const queryString = 'INSERT INTO pokemon(name, height) VALUES($1, $2);';
+    const values = [params.name, params.height];
+  } else {
+    const queryString = 'INSERT INTO pokemon(name, height, users_id) VALUES($1, $2, $3);';
+    const values = [params.name, params.height, request.cookies['users_id']];
+  }
+  
 
   pool.query(queryString, values, (err, result) => {
     if (err) {
@@ -180,10 +190,11 @@ const login = (request, response) => {
 }
 
 const loginCheck = (request, response) => {
+  console.log(request.cookies);
   let check = sha256(request.body.password);
   let username = request.body.username;
 
-  const queryString = 'SELECT password_hash FROM users WHERE username = $1';
+  const queryString = 'SELECT * FROM users WHERE username = $1';
   const values = [username];
 
   pool.query(queryString, values, (err, result) => {
@@ -195,7 +206,8 @@ const loginCheck = (request, response) => {
       if (result.rows[0] == null) {
         response.send("wrong password/ username");
       } else if(result.rows[0].password_hash == check) {
-        response.cookie('loginStatus', true);
+        response.cookie('loginStatus', 'true');
+        response.cookie('users_id', result.rows[0].id);
         response.send("you are logged in!");
       } else {
         response.send("wrong password/ username");
@@ -229,7 +241,7 @@ app.get('/pokemon/new', getNew);
 app.get('/pokemon/:id', getPokemon);
 app.get('/pokemon/:id/delete', deletePokemonForm);
 
-app.post('/pokemon', postPokemon);
+app.post('/pokemons', postPokemon);
 
 app.put('/pokemon/:id', updatePokemon);
 

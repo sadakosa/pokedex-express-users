@@ -1,11 +1,10 @@
 var React = require("react");
+var layout = require('./layout.jsx');
 
 class Edit extends React.Component {
   render() {
     return (
-      <html>
-        <head />
-        <body>
+      <layout>
           <h4>Editing: {this.props.pokemon.name}</h4>
           <form
             className="pokemon-form"
@@ -87,8 +86,7 @@ class Edit extends React.Component {
             </div>
             <input name="submit" type="submit" />
           </form>
-        </body>
-      </html>
+        </layout>
     );
   }
 }

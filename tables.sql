@@ -1,5 +1,6 @@
 CREATE TABLE IF NOT EXISTS pokemon (
     id SERIAL PRIMARY KEY,
+    users_id integer,
     num VARCHAR(3),
     name TEXT,
     img TEXT,
@@ -11,6 +12,14 @@ CREATE TABLE IF NOT EXISTS pokemon (
     avg_spawns VARCHAR(15),
     spawn_time VARCHAR(15)
 );
+
+CREATE TABLE IF NOT EXISTS types (
+
+);
+
+CREATE TABLE IF NOT EXISTS pokemon_types (
+    
+)
 
 CREATE TABLE IF NOT EXISTS users (
     id SERIAL PRIMARY KEY,
