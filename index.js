@@ -205,10 +205,13 @@ const loginCheck = (request, response) => {
 }
 
 const logout = (request, response) => {
-  console.log(request.cookies);
+  console.log('loginStatus: ' + request.cookies['loginStatus']);
     if (request.cookies != null) {
-      if (request.cookies['loginStatus'] == true) {
+      console.log('got through');
+      if (request.cookies['loginStatus'] == 'true') {
+        console.log('got through2');
         response.cookie('loginStatus', false);
+        console.log('log out');
         response.send('you r logged out!');
       }
     }
