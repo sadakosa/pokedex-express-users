@@ -6,7 +6,7 @@ class login extends React.Component {
       <html>
         <head />
         <body>
-          <form method="GET" action="/loginCheck">
+          <form method="POST" action="/loginCheck">
             <div className="user-details">
               username:<input name="username" type="text" />
             </div>

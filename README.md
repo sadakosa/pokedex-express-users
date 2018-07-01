@@ -21,7 +21,7 @@ The deliverable is an app that has CRUD functionality on pokemons that can be as
 
 * Create the relevant `tables.sql` file to create the appropriate table for your database
 
-* Create new routes for user-creattion
+* Create new routes for user-creation
 
 * Create new routes for user-login and user-logout
 

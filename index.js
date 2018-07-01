@@ -12,6 +12,8 @@ const express = require('express');
 const methodOverride = require('method-override');
 const pg = require('pg');
 var sha256 = require('js-sha256');
+const cookieParser = require('cookie-parser');
+
 
 // Initialise postgres client
 const config = {
@@ -178,9 +180,7 @@ const login = (request, response) => {
 }
 
 const loginCheck = (request, response) => {
-  console.log(request.body);
   let check = sha256(request.body.password);
-  console.log('check: ' + check); 
   let username = request.body.username;
 
   const queryString = 'SELECT password_hash FROM users WHERE username = $1';
@@ -192,10 +192,26 @@ const loginCheck = (request, response) => {
     } else {
       console.log('Query result:', result);
 
-      // redirect to login page
-      // response.redirect('/login');
+      if (result.rows[0] == null) {
+        response.send("wrong password/ username");
+      } else if(result.rows[0].password_hash == check) {
+        response.cookie('loginStatus', true);
+        response.send("you are logged in!");
+      } else {
+        response.send("wrong password/ username");
+      };
     }
   });
+}
+
+const logout = (request, response) => {
+  console.log(request.cookies);
+    if (request.cookies != null) {
+      if (request.cookies['loginStatus'] == true) {
+        response.cookie('loginStatus', false);
+        response.send('you r logged out!');
+      }
+    }
 }
 /**
  * ===================================
@@ -217,10 +233,12 @@ app.put('/pokemon/:id', updatePokemon);
 app.delete('/pokemon/:id', deletePokemon);
 
 // TODO: New routes for creating users
+app.use(cookieParser());
 app.get('/userCreationForm', userCreationForm);
 app.post('/userCreation', userCreation);
 app.get('/login', login);
-app.get('/loginCheck', loginCheck);
+app.post('/loginCheck', loginCheck);
+app.get('/logout', logout);
 
 
 /**
