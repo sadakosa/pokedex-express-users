@@ -11,10 +11,11 @@
 const express = require('express');
 const methodOverride = require('method-override');
 const pg = require('pg');
+var sha256 = require('js-sha256');
 
 // Initialise postgres client
 const config = {
-  user: 'ck',
+  user: 'sabrinachow',
   host: '127.0.0.1',
   database: 'pokemons',
   port: 5432,
@@ -150,6 +151,52 @@ const deletePokemonForm = (request, response) => {
 const deletePokemon = (request, response) => {
   response.send("COMPLETE ME");
 }
+
+const userCreationForm = (request, response) => {
+  response.render('userCreationForm');
+}
+
+const userCreation = (request, response) => {
+  console.log(request.body);
+  const queryString = 'INSERT INTO users(username, email, password_hash) VALUES($1, $2, $3);';
+  const values = [request.body.username, request.body.email, sha256(request.body.password)];
+  
+  pool.query(queryString, values, (err, result) => {
+    if (err) {
+      console.error('Query error:', err.stack);
+    } else {
+      console.log('Query result:', result);
+
+      // redirect to login page
+      response.redirect('/login');
+    }
+  });
+}
+
+const login = (request, response) => {
+  response.render('login');
+}
+
+const loginCheck = (request, response) => {
+  console.log(request.body);
+  let check = sha256(request.body.password);
+  console.log('check: ' + check); 
+  let username = request.body.username;
+
+  const queryString = 'SELECT password_hash FROM users WHERE username = $1';
+  const values = [username];
+
+  pool.query(queryString, values, (err, result) => {
+    if (err) {
+      console.error('Query error:', err.stack);
+    } else {
+      console.log('Query result:', result);
+
+      // redirect to login page
+      // response.redirect('/login');
+    }
+  });
+}
 /**
  * ===================================
  * Routes
@@ -170,6 +217,10 @@ app.put('/pokemon/:id', updatePokemon);
 app.delete('/pokemon/:id', deletePokemon);
 
 // TODO: New routes for creating users
+app.get('/userCreationForm', userCreationForm);
+app.post('/userCreation', userCreation);
+app.get('/login', login);
+app.get('/loginCheck', loginCheck);
 
 
 /**

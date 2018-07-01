@@ -10,7 +10,7 @@ This is a clean new app without a `seed.sql` file. So you'll need at least 2 use
 2.  Run `npm install` to install dependencies
 3.  Create a new Postgres database by running `createdb pokemons -U <your_username>`
 4.  Run `psql -U <your_username> -d pokemons -a -f tables.sql` to create a `pokemon` table in the database
-5.  Look in the starter file called `index.js`, run `nodemon` to start local server on port 3000
+5. t Look in the starter file called `index.js`, run `nodemon` to start local server on port 3000
 6.  Open `localhost:3000` on your browser and see the home page
 
 ## Deliverables
@@ -21,7 +21,7 @@ The deliverable is an app that has CRUD functionality on pokemons that can be as
 
 * Create the relevant `tables.sql` file to create the appropriate table for your database
 
-* Create new routes for user-creation
+* Create new routes for user-creattion
 
 * Create new routes for user-login and user-logout
 
